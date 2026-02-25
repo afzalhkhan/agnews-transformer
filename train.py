@@ -22,15 +22,15 @@ from tqdm.auto import tqdm
 @dataclass
 class Config:
     model_name: str = "distilbert-base-uncased"
-    max_length: int = 128          # shorter sequences = faster
+    max_length: int = 128         
     train_batch_size: int = 16
     eval_batch_size: int = 32
-    num_epochs: int = 1            # 1 epoch for speed; good enough for project
+    num_epochs: int = 1            
     learning_rate: float = 2e-5
     weight_decay: float = 0.01
     warmup_ratio: float = 0.1
     seed: int = 42
-    output_dir: str = "models/distilbert-agnews"   # <-- new directory
+    output_dir: str = "models/distilbert-agnews" 
 
 
 cfg = Config()
@@ -54,15 +54,14 @@ def compute_metrics(preds: np.ndarray, labels: np.ndarray) -> Dict[str, float]:
 # ------------------------ Data Preparation --------------------------- #
 
 def load_and_prepare_data(tokenizer):
-    # AG News: 4-class news classification (world, sports, business, sci/tech)
+
     dataset = load_dataset("ag_news")
 
-    # Use a smaller subset of the train split to speed things up
     small_train = dataset["train"].shuffle(seed=cfg.seed).select(range(5000))
     train_valid = small_train.train_test_split(test_size=0.1, seed=cfg.seed)
     train_ds = train_valid["train"]
     valid_ds = train_valid["test"]
-    test_ds = dataset["test"]  # can also subset if needed
+    test_ds = dataset["test"] 
 
     def tokenize_batch(batch):
         return tokenizer(
@@ -77,12 +76,10 @@ def load_and_prepare_data(tokenizer):
     valid_enc = valid_ds.map(tokenize_batch, batched=True, num_proc=4)
     test_enc  = test_ds.map(tokenize_batch, batched=True, num_proc=4)
 
-    # rename 'label' -> 'labels' so model can use it directly
     train_enc = train_enc.rename_column("label", "labels")
     valid_enc = valid_enc.rename_column("label", "labels")
     test_enc  = test_enc.rename_column("label", "labels")
 
-    # keep only relevant columns and set to torch tensors
     columns = ["input_ids", "attention_mask", "labels"]
     train_enc.set_format(type="torch", columns=columns)
     valid_enc.set_format(type="torch", columns=columns)
@@ -102,7 +99,7 @@ def train():
     tokenizer = AutoTokenizer.from_pretrained(cfg.model_name)
     model = AutoModelForSequenceClassification.from_pretrained(
         cfg.model_name,
-        num_labels=4,   # <-- 4 classes now
+        num_labels=4,   
     )
     model.to(device)
 
@@ -209,7 +206,7 @@ def train():
             os.makedirs(save_path, exist_ok=True)
             model.save_pretrained(save_path)
             tokenizer.save_pretrained(save_path)
-            print(f"✅ New best model saved at {save_path} (val_acc={best_val_acc:.4f})")
+            print(f"New best model saved at {save_path} (val_acc={best_val_acc:.4f})")
 
     print(f"Training complete. Best validation accuracy: {best_val_acc:.4f}")
 
