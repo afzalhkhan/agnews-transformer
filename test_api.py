@@ -94,15 +94,6 @@ def test_correct_classification(category, text):
 
 
 def test_bulk_accuracy():
-    """
-    40 samples mixing easy and deliberately hard/ambiguous cases to get a
-    realistic accuracy number. Hard cases include:
-      - business/sci_tech overlap  (Tesla, OpenAI funding, Apple valuation)
-      - world/sports overlap       (Olympics ban, FIFA corruption)
-      - world/business overlap     (sanctions, trade war, G7 tax)
-      - short or noisy text
-    Threshold is 75% — the printed number is what goes on your resume.
-    """
     labelled = [
 
         ("world", "World leaders gathered in Geneva for climate change negotiations."),
