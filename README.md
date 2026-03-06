@@ -174,10 +174,3 @@ transformer-news-classifier
 * Scikit-learn
 
 ---
-
-## Future Improvements
-
-* Batch inference support
-* Quantization for faster CPU inference
-* GPU deployment
-* Model monitoring
