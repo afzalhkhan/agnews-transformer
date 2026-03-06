@@ -55,7 +55,7 @@ def main():
         per_device_train_batch_size=16,
         per_device_eval_batch_size=32,
         num_train_epochs=2,
-        evaluation_strategy="epoch",
+        eval_strategy="epoch",
         save_strategy="epoch",
         logging_steps=100,
     )
