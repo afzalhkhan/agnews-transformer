@@ -1,25 +1,32 @@
 import torch
-from transformers import AutoModelForSequenceClassification
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-MODEL_PATH = "models/distilbert-agnews/best"
+MODEL_PATH = "models/distilbert/best"
 
+tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
 model = AutoModelForSequenceClassification.from_pretrained(MODEL_PATH)
+
 model.eval()
 
-dummy_input_ids = torch.randint(0, 1000, (1, 128))
-dummy_attention_mask = torch.ones((1, 128))
+dummy = tokenizer(
+    "test input",
+    return_tensors="pt",
+    padding="max_length",
+    truncation=True,
+    max_length=128,
+)
 
 torch.onnx.export(
     model,
-    (dummy_input_ids, dummy_attention_mask),
-    "models/distilbert.onnx",
+    (dummy["input_ids"], dummy["attention_mask"]),
+    "distilbert.onnx",
     input_names=["input_ids", "attention_mask"],
     output_names=["logits"],
     dynamic_axes={
         "input_ids": {0: "batch"},
         "attention_mask": {0: "batch"},
     },
-    opset_version=13,
+    opset_version=14,
 )
 
 print("ONNX export complete")

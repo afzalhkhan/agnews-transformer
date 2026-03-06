@@ -7,9 +7,13 @@ payload = {
     "text": "NASA launches a new satellite to study climate change."
 }
 
+# warmup requests
+for _ in range(10):
+    requests.post(url, json=payload)
+
 times = []
 
-for _ in range(20):
+for _ in range(50):
 
     start = time.time()
 

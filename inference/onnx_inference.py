@@ -1,7 +1,8 @@
 import onnxruntime as ort
 import numpy as np
 
-session = ort.InferenceSession("models/distilbert.onnx")
+
+session = ort.InferenceSession("distilbert.onnx")
 
 
 def predict(input_ids, attention_mask):

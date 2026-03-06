@@ -7,7 +7,7 @@ import torch.nn.functional as F
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import time
 
-MODEL_PATH = "models/distilbert-agnews/best"   
+MODEL_PATH = "models/roberta/best"   
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

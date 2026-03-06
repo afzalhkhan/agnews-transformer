@@ -10,3 +10,6 @@ wheels/
 .venv
 models/
 .pytest_cache
+distilbert.onnx.data
+distilbert.onnx
+uv.lock
